@@ -58,7 +58,6 @@ namespace Smart4All.Plugin.Champion
 
             Gapcloser.OnGapcloser += GapcloserOnOnGapcloser;
 
-            // Disabled while event is broken
             Dash.OnDash += delegate(Obj_AI_Base sender, Dash.DashEventArgs args)
             {
                 if(sender == null || !sender.IsValidTarget() || args == null) return;
@@ -68,6 +67,12 @@ namespace Smart4All.Plugin.Champion
                     Q.Cast(args.EndPos);
                 }
             };
+        }
+
+        public override void GameOnOnNotify(GameNotifyEventArgs args)
+        {
+            if(Modes.Misc.MasteryShow)
+                base.GameOnOnNotify(args);
         }
 
         #region Drawing
@@ -93,6 +98,20 @@ namespace Smart4All.Plugin.Champion
             if (R.IsReady() && Modes.Draw.UseR)
             {
                 Circle.Draw(SharpDX.Color.Blue, R.Range, Player.Instance);
+            }
+
+            if (R.IsReady() && Modes.Draw.DrawRKillable)
+            {
+                foreach (var target in EntityManager.Heroes.Enemies.Where(t => !t.IsDead && t.Health > 0 && t.IsValidTarget(R.Range)))
+                {
+                    if (target.Health < Player.Instance.GetSpellDamage(target, SpellSlot.R))
+                    {
+                        var pos = target.Position.To2D();
+                        pos += new Vector2(0, 20);
+
+                        Drawing.DrawText(pos, Color.Red, "Free Kill", 10);
+                    }
+                }
             }
 
         }
@@ -593,6 +612,7 @@ namespace Smart4All.Plugin.Champion
 
             public static class Misc
             {
+                private static readonly CheckBox _masteryShow;
                 private static readonly CheckBox _checkSafePosForDash;
                 private static readonly CheckBox _autoQImmobile;
                 private static readonly CheckBox _autoQOnDash;
@@ -600,6 +620,11 @@ namespace Smart4All.Plugin.Champion
                 private static readonly CheckBox _antiGapCloserQ;
                 private static readonly CheckBox _antiGapCloserW;
                 private static readonly CheckBox _antiGapCloserE;
+
+                public static bool MasteryShow
+                {
+                    get { return _masteryShow.CurrentValue; }
+                }
 
                 public static bool CheckSafePosForDash
                 {
@@ -639,6 +664,7 @@ namespace Smart4All.Plugin.Champion
                 static Misc()
                 {
                     Menu.AddGroupLabel("Misc");
+                    _masteryShow = Menu.Add("misc.mastery.show", new CheckBox("Show Mastery when kill enemy", false));
                     _checkSafePosForDash = Menu.Add("misc.check.e", new CheckBox("Check Safe pos before E"));
                     _autoQOnDash = Menu.Add("misc.dash.q", new CheckBox("Use Q on Dash"));
                     _autoQImmobile = Menu.Add("misc.immobile.q", new CheckBox("Use Q on Immobile"));
