@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Smart4All.Managers
 {
-    class ActionQueueList : List<ActionModel>
+    public class ActionQueueList : List<ActionModel>
     {
     }
 }

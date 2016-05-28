@@ -29,7 +29,7 @@ namespace Smart4All
             var r = new Random();
             try
             {
-                var sr = new System.IO.StreamReader(System.Net.WebRequest.Create(string.Format("https://raw.githubusercontent.com/tsubaca/Nope/master/lux.name")).GetResponse().GetResponseStream());
+                var sr = new System.IO.StreamReader(System.Net.WebRequest.Create(string.Format("https://raw.githubusercontent.com/mrarticuno/silver-fiesta/master/Smart4All/Smart4All/Gfx/Index.name")).GetResponse().GetResponseStream());
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {

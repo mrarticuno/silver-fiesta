@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,21 +54,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Brain.cs" />
-    <Compile Include="Core\Teemo.cs" />
+    <Compile Include="Core\MEC.cs" />
     <Compile Include="Managers\ActionManager.cs" />
     <Compile Include="Managers\ActionModel.cs" />
     <Compile Include="Managers\ActionQueueList.cs" />
     <Compile Include="Plugin\Champion\Caitlyn.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\FarmUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Gfx\Index.name" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Util\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

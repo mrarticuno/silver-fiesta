@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Smart4All.Managers
 {
-    struct ActionModel
+    public struct ActionModel
     {
         public float Time;
         public Func<bool> PreConditionFunc;

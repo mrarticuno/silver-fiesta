@@ -7,7 +7,7 @@ using EloBuddy;
 
 namespace Smart4All.Managers
 {
-    class ActionManager
+    public class ActionManager
     {
         public void EnqueueAction(ActionQueueList list, Func<bool> preCondition, Action comboAction, Func<bool> conditionToRemove)
         {

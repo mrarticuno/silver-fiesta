@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using EloBuddy;
 using EloBuddy.SDK;
 using Smart4All.Managers;
+using Smart4All.Plugin.Champion;
 
 namespace Smart4All.Core
 {
-    public class Brain
+    public abstract class Brain
     {
         #region Global
         public static string GVersion = "0.0.1";
@@ -14,21 +15,20 @@ namespace Smart4All.Core
 
         public static List<Spell.SpellBase> Spells;
 
-        private readonly ActionQueueList comboQueue;
-        private readonly ActionQueueList lastHitQueue;
-        private readonly ActionQueueList harassQueue;
-        private readonly ActionQueueList laneQueue;
-        private readonly ActionQueueList jungleQueue;
+        public readonly ActionQueueList comboQueue;
+        public readonly ActionQueueList lastHitQueue;
+        public readonly ActionQueueList harassQueue;
+        public readonly ActionQueueList laneQueue;
+        public readonly ActionQueueList jungleQueue;
 
-        private readonly ActionManager actionManager;
-
-        private Orbwalker.ActiveModes activeMode;
+        public static ActionManager actionManager;
 
         private readonly bool tick;
+        public static bool permaHarass = false;
 
         #endregion
 
-        public Brain()
+        protected Brain()
         {
             actionManager = new ActionManager();
             comboQueue = new ActionQueueList();
@@ -36,9 +36,10 @@ namespace Smart4All.Core
             harassQueue = new ActionQueueList();
             laneQueue = new ActionQueueList();
             jungleQueue = new ActionQueueList();
+            Initialize();
         }
 
-        public virtual void Initialize()
+        public void Initialize()
         {
             Drawing.OnDraw += OnDraw;
             Game.OnNotify += GameOnOnNotify;
@@ -93,7 +94,7 @@ namespace Smart4All.Core
 
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)) OnCombo();
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) OnHarass();
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) OnLaneClear();
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) || permaHarass) OnLaneClear();
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit)) OnLastHit();
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Flee)) OnFlee();
             if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)) OnJungleClear();
@@ -106,22 +107,42 @@ namespace Smart4All.Core
 
         public virtual void OnCombo()
         {
+            if (actionManager.ExecuteNextAction(comboQueue))
+            {
+                return;
+            }
         }
 
         public virtual void OnHarass()
         {
+            if (actionManager.ExecuteNextAction(harassQueue))
+            {
+                return;
+            }
         }
 
         public virtual void OnLaneClear()
         {
+            if (actionManager.ExecuteNextAction(laneQueue))
+            {
+                return;
+            }
         }
 
         public virtual void OnJungleClear()
         {
+            if (actionManager.ExecuteNextAction(jungleQueue))
+            {
+                return;
+            }
         }
 
         public virtual void OnLastHit()
         {
+            if (actionManager.ExecuteNextAction(lastHitQueue))
+            {
+                return;
+            }
         }
 
         public virtual void OnFlee()
